@@ -1,6 +1,6 @@
 # rxtest
 
-> A Vue.js project
+> A RxJS project
 
 ## Build Setup
 
