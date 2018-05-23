@@ -7,6 +7,40 @@ import 'rxjs/add/operator/map'
 import 'rxjs/add/operator/bufferCount'
 import 'rxjs/add/operator/filter'
 
+// -------------------以下是Observable
+
+// const fruitsObservable = Observable.create(observe => {
+//   observe.next('🍎')
+//   observe.next('🍊')
+//   // observe.error(new Error('mistake'))
+//   setTimeout(() => {
+//     observe.next('🍋')
+//     observe.complete()
+//   }, 1000)
+// })
+// const fruitsObserver = {
+//   next: data => console.log(data),
+//   error: error => console.log(error.message),
+//   complete: () => console.log('done!')
+// }
+
+// console.log('----- before subscribe -----')
+// const fruitsSubscription = fruitsObservable.subscribe(fruitsObserver)
+// console.log('----- after subscribe -----')
+
+// setTimeout(() => {
+//   fruitsSubscription.unsubscribe()
+// }, 500)
+
+// -------------------以下是Operator
+// Observable.from(['🍎', '🍊', '🍋']).subscribe(data => console.log(data))
+// Observable.fromEvent(document.getElementById('search'), 'keyup')
+//   .debounceTime(1000)
+//   .subscribe((data) => {
+//     console.log(data.key)
+//     console.log('searching...')
+//   })
+
 const menu = document.getElementById('menu')
 const menuLIs = Array.from(menu.getElementsByTagName('li'))
 const subMenu = document.getElementById('sub-menu')
@@ -19,8 +53,13 @@ let mouseLocs = []
 const menuTopRight = { x: menu.offsetWidth, y: 0 }
 const menuBottomRight = { x: menu.offsetWidth, y: menu.offsetHeight }
 menuLIs.forEach((item, index) => { item.index = index })
+// menu.addEventListener('mouseover', handleToggleTabs)
+// menu.addEventListener('mousemove', storeMouseLocation)
+// menu.addEventListener('mouseout', clearTimeouter)
+// subMenu.addEventListener('mouseenter', clearMouseLocs)
 
 Observable.fromEvent(menu, 'mouseover')
+  // .filter(e => e.target.nodeName.toUpperCase() === 'LI')
   .subscribe(e => handleToggleTabs(e))
 Observable.fromEvent(menu, 'mousemove')
   .map(event => ({ x: event.clientX - container.offsetLeft, y: event.clientY - container.offsetTop }))
@@ -62,6 +101,39 @@ function handleToggleTabs (e) {
   }
 }
 
+/**
+ * 存储鼠标在当前选项卡移动时的最后三个坐标
+ * @param e
+ */
+// function storeMouseLocation (e) {
+//   if (e.target.nodeName.toUpperCase() === 'LI') {
+//     // 坐标原点在 container 右上角
+//     const x = e.clientX - container.offsetLeft
+//     const y = e.clientY - container.offsetTop
+//     mouseLocs.push({ x, y })
+
+//     if (mouseLocs.length > 3) {
+//       mouseLocs.shift()
+//     }
+//   }
+// }
+
+// function clearMouseLocs () {
+//   mouseLocs = []
+// }
+/**
+ * 鼠标移出当前选项卡时，如果当前选项卡设置了定时器，说明判断 isInTriangle 为 true,
+ * 定时器内设置的是切换选项卡的 function，这时，清除定时器，便不会触发 toggle 切换选项卡
+ * @param e
+ */
+// function clearTimeouter (e) {
+//   if (e.target.nodeName.toUpperCase() === 'LI') {
+//     if (e.target.timeouter) {
+//       clearTimeout(e.target.timeouter)
+//       console.log('clearTimeout')
+//     }
+//   }
+// }
 
 /**
  * 切换选项卡和内容样式
